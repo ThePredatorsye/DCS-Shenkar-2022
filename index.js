@@ -1,11 +1,17 @@
-const http = require ("http");
-const port = 8080;
+// const http = require ("http");
 
-http.createServer((req, res) => {
-	res.writeHead(200); // Status code in header
-	res.write("Mor Amihay"); // Send res body (can write multiple times)
-	res.end(); // Send & close connection
-}).listen(port); // Listen for connection on this port
 
-console.log(`Listening on port ${port}`);
+
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 8080;
+
+app.get('/api/v1/githubUser/:githubUserName/avatar', (req,res) => { res.send("Avatar") });
+app.get('/api/v1/githubUser/:githubUserName/repo/:repoName', (req,res) => { res.send("repoName") });
+app.get('/api/v1/githubUser/:githubUserName/repo/:repoName/contributers', (req,res) => { res.send("contributers") });
+
+app.listen(port);
+
+
+
 
