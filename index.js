@@ -1,12 +1,42 @@
 const https = require("https");
-
+const axios = require('axios');
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
+User = githubUser => {
+  return new Promise((resolve, reject) => {
+      axios.get(`https://api.github.com/users/${githubUser}`)
+          .then(response => {
+              resolve(response.data);
+          }).catch(err => {
+              reject(err);
+          });
+  });
+};
 
 app.get("/api/v1/githubUser/:githubUserName/avatar", (req, res) => {
     console.log("request");
-  res.send("Avatar");
+    console.log(`${req.params.githubUserName}`);
+    console.log(`${req.params.avatar}`);
+
+    User(req.params.githubUserName)
+    .then(data => {
+        res.send(`
+        <!doctype html>
+        <html>
+         <head>
+         <title>Avatar IMG</title>
+         </head>
+         <body>
+         <img src="${data.avatar_url}" title="avatarimg" alt="avatarimg" >      
+        </body>
+        </html>
+        `);
+    }).catch(() => {
+        res.send("username Not Exist");
+    });
+
+  
 });
 
 app.get("/api/v1/githubUser/:githubUserName/repo/:repoName", (req, res) => {
